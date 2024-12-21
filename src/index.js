@@ -22,6 +22,7 @@ const getUserFromToken = async (token, db) => {
 const typeDefs = gql`
   type Query {
     getUserProfile: User
+    getUsers: [User]
     myTaskLists: [TaskList!]!
     getTaskList(id: ID!): TaskList
   }
@@ -88,6 +89,10 @@ const resolvers = {
   Query: {
     getUserProfile: async (_, __, { db, user }) => {
       return await db.collection('Users').findOne({ _id: ObjectID(user._id) });
+    },
+
+    getUsers: async (_, __, { db }) => {
+      return await db.collection('Users').find().toArray();
     },
 
     myTaskLists: async (_, __, { db, user }) => {
