@@ -21,6 +21,7 @@ const getUserFromToken = async (token, db) => {
 
 const typeDefs = gql`
   type Query {
+    getUserProfile: User
     myTaskLists: [TaskList!]!
     getTaskList(id: ID!): TaskList
   }
@@ -85,6 +86,10 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
+    getUserProfile: async (_, __, { db, user }) => {
+      return await db.collection('Users').findOne({ _id: ObjectID(user._id) });
+    },
+
     myTaskLists: async (_, __, { db, user }) => {
       // if (!user) { throw new Error('Authentication Error. Please sign in'); }
 
